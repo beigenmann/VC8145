@@ -263,7 +263,7 @@ def start(port=80):
     wlan_sta.active(True)
     wlan_ap.active(True)
 
-    wlan_ap.config(essid=ap_ssid, password=ap_password, authmode=ap_authmode)
+    wlan_ap.config(essid=ap_ssid, password=ap_password, authmode=ap_authmode,dhcp_hostname="VC8145")
 
     server_socket = socket.socket()
     server_socket.bind(addr)
