@@ -1,272 +1,274 @@
 <!DOCTYPE html>
 
 <html>
-
-<head>
+  <head>
     <meta charset="utf-8" />
     <title>VC8145</title>
-</head>
+  </head>
 
-<style>
+  <style>
     @font-face {
-        font-family: "DMM";
-        src: url("DMM.woff") format('woff');
+      font-family: "DMM";
+      src: url("DMM.woff") format("woff");
     }
     body {
-        background-color: black;
-        margin:0;
-        padding:0;
-        font-family:verdana,arial,helvetica,sans-serif;
-        font-size:0.8em;
+      background-color: black;
+      margin: 0;
+      padding: 0;
+      font-family: verdana, arial, helvetica, sans-serif;
+      font-size: 0.8em;
     }
     #mode1 {
-        font-family: DMM;
-        color: yellow;
-        font-size: 18vw;
-        padding-left: 5vw;
-        text-align: right;
-        width: 6vw;
-        display: inline-block;
+      font-family: DMM;
+      color: yellow;
+      font-size: 18vw;
+      padding-left: 5vw;
+      text-align: right;
+      width: 6vw;
+      display: inline-block;
     }
 
     #mode2 {
-        font-family: Arial, Helvetica, sans-serif;
-        color: yellow;
-        font-size: 5vw;
-        padding: 0px;
-        text-align: center;
-        width: 30vw;
-        display: inline-block;
+      font-family: Arial, Helvetica, sans-serif;
+      color: yellow;
+      font-size: 5vw;
+      padding: 0px;
+      text-align: center;
+      width: 30vw;
+      display: inline-block;
     }
 
     #meterValue1 {
-        font-family: DMM;
-        color: green;
-        font-size: 8vw;
-        padding: 0px;
-        text-align: right;
-        width: 40vw;
-        display: inline-block;
+      font-family: DMM;
+      color: green;
+      font-size: 8vw;
+      padding: 0px;
+      text-align: right;
+      width: 40vw;
+      display: inline-block;
     }
 
     #unit1 {
-        color: green;
-        font-size: 10vw;
-        padding: 0vw;
-        text-align: left;
-        width: 5vw;
-        display: inline-block;
+      color: green;
+      font-size: 10vw;
+      padding: 0vw;
+      text-align: left;
+      width: 5vw;
+      display: inline-block;
     }
 
     #meterValue2 {
-        font-family: DMM;
-        color: red;
-        font-size: 14vw;
-        padding: 0px;
-        text-align: center;
-        width: 69vw;
-        display: inline-block;
+      font-family: DMM;
+      color: red;
+      font-size: 14vw;
+      padding: 0px;
+      text-align: center;
+      width: 69vw;
+      display: inline-block;
     }
 
     #unit2 {
-        color: red;
-        font-size: 16vw;
-        padding: 0vw;
-        text-align: center;
-        width: 10vw;
-        display: inline-block;
+      color: red;
+      font-size: 16vw;
+      padding: 0vw;
+      text-align: center;
+      width: 10vw;
+      display: inline-block;
     }
 
     #range,
     #hold,
     #rel,
     #minmax {
-        padding-top: 1vw;
-        font-size: 2vw;
-        font-family: Arial, Helvetica, sans-serif;
-        background-color: blue;
-        color: white;
-        width: 12vw;
-        height: 2vw;
-        margin: 5px;
-        display: inline-block;
-        text-align: center;
-        vertical-align: middle;
-
+      padding-top: 1vw;
+      font-size: 2vw;
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: blue;
+      color: white;
+      width: 12vw;
+      height: 2vw;
+      margin: 5px;
+      display: inline-block;
+      text-align: center;
+      vertical-align: middle;
     }
 
     button {
-        font-size: 2vw;
-        width: 12vw;
-        margin: 5px;
+      font-size: 2vw;
+      width: 12vw;
+      margin: 5px;
     }
 
     progress {
-        width: 90vw;
-        height: 2vw;
+      width: 90vw;
+      height: 2vw;
     }
-</style>
+  </style>
 
-<script language="javascript">
-
+  <script language="javascript">
     // var output;
 
     function init() {
-        // output = setValue("output");
-        testWebSocket();
+      // output = setValue("output");
+      testWebSocket();
     }
 
     function testWebSocket() {
-        //var wsUri           = "ws://" + window.location.hostname;
-        var wsUri = "ws://espressif.lan";
-        console.log("Connection to " + wsUri + "...")
-        websocket = new WebSocket(wsUri);
-        websocket.onopen = function (evt) { onOpen(evt) };
-        websocket.onclose = function (evt) { onClose(evt) };
-        websocket.onmessage = function (evt) { onMessage(evt) };
-        websocket.onerror = function (evt) { onError(evt) };
+      var wsUri = "ws://" + window.location.hostname;
+      //var wsUri = "ws://espressif.lan";
+      console.log("Connection to " + wsUri + "...");
+      websocket = new WebSocket(wsUri);
+      websocket.onopen = function (evt) {
+        onOpen(evt);
+      };
+      websocket.onclose = function (evt) {
+        onClose(evt);
+      };
+      websocket.onmessage = function (evt) {
+        onMessage(evt);
+      };
+      websocket.onerror = function (evt) {
+        onError(evt);
+      };
     }
 
     function onOpen(evt) {
-        console.log("<strong>-- CONNECTED --</strong>");
-        //SendMsg("Hello world :)");
-        //SendMsg("This is a WebSocket test");
-        //SendMsg("(with a text frame encoded in UTF-8)");
-        //setTimeout( function() { websocket.close() }, 5000 )
+      console.log("<strong>-- CONNECTED --</strong>");
+      //SendMsg("Hello world :)");
+      //SendMsg("This is a WebSocket test");
+      //SendMsg("(with a text frame encoded in UTF-8)");
+      //setTimeout( function() { websocket.close() }, 5000 )
     }
 
     function onClose(evt) {
-        console.log("<strong>-- DISCONNECTED --</strong>");
+      console.log("<strong>-- DISCONNECTED --</strong>");
     }
 
     function onMessage(evt) {
-        try {
-            //console.log('MSG FROM SERVER' , evt.data  );
-            var data = JSON.parse(evt.data);
-            
-            if (data["second"].value.includes("??")) {
-                setValue("meterValue1", "");
-                setValue("unit1", "");
-            } else {
-                setValue("meterValue1", data["second"].sign + data["second"].value);
-                setValue("unit1", data["second"].pre_unit + data["second"].unit);
-            }
-            setValue("mode2", data["first"].mode);
-            _mode = " "
-            if (data["first"].mode == "Capacitance") {
-                _mode = "H"
-            }
-            if (data["first"].mode == "Diode") {
-                _mode = "D"
-            }
-            if (data["first"].mode == "Voltage AC") {
-                _mode = "F"
-            }
-            if (data["first"].mode == "Voltage DC") {
-                _mode = "E"
-            }
-            setValue("mode1", _mode);
+      try {
+        //console.log('MSG FROM SERVER' , evt.data  );
+        var data = JSON.parse(evt.data);
 
-            setValue("meterValue2", data["first"].sign + data["first"].value);
-            setValue("unit2", data["first"].pre_unit + data["first"].unit);
-            setValue("range", data["first"].autorange);
-            setValue("hold", data["first"].hold);
-            setValue("rel", data["first"].rel);
-            setValue("minmax", data["first"].minmax);
-            document.getElementById("analog_bar").value = (data["status"].value -0x7f) ;
-            console.log('MSG FROM SERVER', data["status"].value);
+        if (data["second"].value.includes("??")) {
+          setValue("meterValue1", "");
+          setValue("unit1", "");
+        } else {
+          setValue("meterValue1", data["second"].sign + data["second"].value);
+          setValue("unit1", data["second"].pre_unit + data["second"].unit);
         }
-        catch (e) {
+        setValue("mode2", data["first"].mode);
+        _mode = " ";
+        if (data["first"].mode == "Capacitance") {
+          _mode = "H";
         }
+        if (data["first"].mode == "Diode") {
+          _mode = "D";
+        }
+        if (data["first"].mode == "Voltage AC") {
+          _mode = "F";
+        }
+        if (data["first"].mode == "Voltage DC") {
+          _mode = "E";
+        }
+        setValue("mode1", _mode);
+
+        setValue("meterValue2", data["first"].sign + data["first"].value);
+        setValue("unit2", data["first"].pre_unit + data["first"].unit);
+        setValue("range", data["first"].autorange);
+        setValue("hold", data["first"].hold);
+        setValue("rel", data["first"].rel);
+        setValue("minmax", data["first"].minmax);
+        document.getElementById("analog_bar").value =
+          data["status"].value - 0x7f;
+        console.log("MSG FROM SERVER", data["status"].value);
+      } catch (e) {}
     }
     function setValue(id, value) {
-        if (value == null || value.length == 0) {
-            value = "&nbsp;"
-        }
-        var element = document.getElementById(id);
-        if (element != null) {
-            element.innerHTML = value;
-        }
-        else {
-            console.log(id, element);
-        }
-
+      if (value == null || value.length == 0) {
+        value = "&nbsp;";
+      }
+      var element = document.getElementById(id);
+      if (element != null) {
+        element.innerHTML = value;
+      } else {
+        console.log(id, element);
+      }
     }
 
     function onError(evt) {
-        console.log('ERROR : <span style="color: red;">' + evt.data + '</span>');
+      console.log('ERROR : <span style="color: red;">' + evt.data + "</span>");
     }
 
     function SendMsg(msg) {
-        console.log('MSG TO SERVER : <span style="color: green;">' + msg + '</span>');
-        websocket.send(msg);
+      console.log(
+        'MSG TO SERVER : <span style="color: green;">' + msg + "</span>"
+      );
+      websocket.send(msg);
     }
     function onRange() {
-        console.log("onRange");
-        websocket.send("range");
+      console.log("onRange");
+      websocket.send("range");
     }
     function onHold() {
-        console.log("onHold");
-        websocket.send("hold");
+      console.log("onHold");
+      websocket.send("hold");
     }
 
     function onRel() {
-        console.log("onRel");
-        websocket.send("rel");
+      console.log("onRel");
+      websocket.send("rel");
     }
 
     function onMinMax() {
-        console.log("onMinMax");
-        websocket.send("min_max");
+      console.log("onMinMax");
+      websocket.send("min_max");
     }
 
     function onSelect() {
-        console.log("onSelect");
-        websocket.send("select");
+      console.log("onSelect");
+      websocket.send("select");
     }
 
     function on2ndView() {
-        console.log("on2ndView");
-        websocket.send("2nd_view");
+      console.log("on2ndView");
+      websocket.send("2nd_view");
     }
 
     function onTimer() {
-        console.log("onTimer");
-        websocket.send("timer");
+      console.log("onTimer");
+      websocket.send("timer");
     }
 
     window.addEventListener("load", init, false);
+  </script>
 
-</script>
-
-<body >
+  <body>
     <!-- <div id="output"></div> -->
     <div>
-        <div id="mode1"></div>
-        <div id="mode2"></div>
-        <div id="meterValue1"></div>
-        <div id="unit1"></div>
+      <div id="mode1"></div>
+      <div id="mode2"></div>
+      <div id="meterValue1"></div>
+      <div id="unit1"></div>
     </div>
     <div>
-        <div id="meterValue2"></div>
-        <div id="unit2"></div>
+      <div id="meterValue2"></div>
+      <div id="unit2"></div>
     </div>
     <div>
-        <span id="range"></span>
-        <span id="hold"></span>
-        <span id="rel"></span>
-        <span id="minmax"></span>
+      <span id="range"></span>
+      <span id="hold"></span>
+      <span id="rel"></span>
+      <span id="minmax"></span>
     </div>
     <div>
-        <button onmousedown="onRange()">Range</button>
-        <button onmousedown="onHold()">Hold</button>
-        <button onmousedown="onRel()">Rel</button>
-        <button onmousedown="onMinMax()">MixMax</button>
-        <button onmousedown="onSelect()">Select</button>
-        <button onmousedown="on2ndView()">2nd View</button>
-        <button onmousedown="onTimer()">Timer</button>
+      <button onmousedown="onRange()">Range</button>
+      <button onmousedown="onHold()">Hold</button>
+      <button onmousedown="onRel()">Rel</button>
+      <button onmousedown="onMinMax()">MixMax</button>
+      <button onmousedown="onSelect()">Select</button>
+      <button onmousedown="on2ndView()">2nd View</button>
+      <button onmousedown="onTimer()">Timer</button>
     </div>
-    <progress id="analog_bar" value="0" max="32"> 32% </progress>
-</body>
-
+    <progress id="analog_bar" value="0" max="32">32%</progress>
+  </body>
 </html>
