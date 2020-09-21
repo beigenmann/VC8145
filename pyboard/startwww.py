@@ -9,7 +9,7 @@ import esp32
 
 try :
 	uart=UART(1,9600)
-	uart.init(9600,bits=8,parity=None,stop=1,rx=13,tx=12, timeout=1000)
+	uart.init(9600,bits=8,parity=None,stop=1,rx=13,tx=12, timeout=500)
 except : 
 	print("Exception Uart")
 try:
