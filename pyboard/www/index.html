@@ -103,7 +103,23 @@
       width: 90vw;
       height: 2vw;
     }
+    canvas {
+      background-color: white;
+      margin: 0;
+      padding: 0;
+      font-family: verdana, arial, helvetica, sans-serif;
+      font-size: 0.8em;
+    }
+    canvas {
+      -moz-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+    }
   </style>
+
+  <script src="moment.min.js"></script>
+  <script src="Chart.min.js"></script>
+  <script src="chartjs-plugin-streaming.min.js"></script>
 
   <script language="javascript">
     // var output;
@@ -114,8 +130,8 @@
     }
 
     function testWebSocket() {
-      var wsUri = "ws://" + window.location.hostname;
-      //var wsUri = "ws://espressif.lan";
+      //var wsUri = "ws://" + window.location.hostname;
+      var wsUri = "ws://espressif.lan";
       console.log("Connection to " + wsUri + "...");
       websocket = new WebSocket(wsUri);
       websocket.onopen = function (evt) {
@@ -171,16 +187,18 @@
           _mode = "E";
         }
         setValue("mode1", _mode);
-
-        setValue("meterValue2", data["first"].sign + data["first"].value);
-        setValue("unit2", data["first"].pre_unit + data["first"].unit);
+        firstValue = data["first"].sign + data["first"].value;
+        setValue("meterValue2", firstValue);
+        firstUnit = data["first"].pre_unit + data["first"].unit;
+        setValue("unit2", firstUnit);
         setValue("range", data["first"].autorange);
         setValue("hold", data["first"].hold);
         setValue("rel", data["first"].rel);
         setValue("minmax", data["first"].minmax);
         document.getElementById("analog_bar").value =
           data["status"].value - 0x7f;
-        console.log("MSG FROM SERVER", data["status"].value);
+        updateChart(data["time"], firstValue, firstUnit, data["first"].mode);
+        // console.log("MSG FROM SERVER", data["status"].value);
       } catch (e) {}
     }
     function setValue(id, value) {
@@ -241,7 +259,6 @@
 
     window.addEventListener("load", init, false);
   </script>
-
   <body>
     <!-- <div id="output"></div> -->
     <div>
@@ -270,5 +287,105 @@
       <button onmousedown="onTimer()">Timer</button>
     </div>
     <progress id="analog_bar" value="0" max="32">32%</progress>
+    <div>
+      <canvas id="myChart"></canvas>
+    </div>
   </body>
+  <script>
+    var currentValue = 0;
+    var chartColors = {
+      red: "rgb(255, 99, 132)",
+      orange: "rgb(255, 159, 64)",
+      yellow: "rgb(255, 205, 86)",
+      green: "rgb(75, 192, 192)",
+      blue: "rgb(54, 162, 235)",
+      purple: "rgb(153, 102, 255)",
+      grey: "rgb(201, 203, 207)",
+    };
+
+    function randomScalingFactor() {
+      return (
+        (Math.random() > 0.5 ? 1.0 : -1.0) * Math.round(Math.random() * 1000)
+      );
+    }
+
+    function onRefresh(chart) {
+      chart.config.data.datasets.forEach(function (dataset) {
+        dataset.data.push({
+          x: Date.now(),
+          y: currentValue, // randomScalingFactor(),
+        });
+      });
+    }
+
+    var color = Chart.helpers.color;
+    var config = {
+      type: "line",
+      data: {
+        datasets: [
+          {
+            label: "Dataset 1 (linear Cube)",
+            backgroundColor: color(chartColors.red).alpha(0.5).rgbString(),
+            borderColor: chartColors.blue,
+            fill: false,
+            cubicInterpolationMode: "monotone",
+            data: [],
+          },
+        ],
+      },
+      options: {
+        title: {
+          display: true,
+          text: "VC8145",
+        },
+        scales: {
+          xAxes: [
+            {
+              type: "realtime",
+              realtime: {
+                duration: 20000,
+                delay: 0,
+              },
+            },
+          ],
+          yAxes: [
+            {
+              scaleLabel: {
+                display: true,
+                labelString: "value",
+              },
+            },
+          ],
+        },
+        tooltips: {
+          mode: "nearest",
+          intersect: false,
+        },
+        hover: {
+          mode: "nearest",
+          intersect: false,
+        },
+      },
+    };
+
+    window.onload = function () {
+      var ctx = document.getElementById("myChart").getContext("2d");
+      window.myChart = new Chart(ctx, config);
+    };
+
+    // your event listener code - assuming the event object has the timestamp and value properties
+    function updateChart(timestamp, value, unit, mode) {
+      currentValue = Number.parseFloat(value);
+      window.myChart.config.data.datasets.forEach(function (dataset) {
+        dataset.label = mode + " [" + unit + "]";
+        dataset.data.push({
+          x: Date.now(),
+          y: currentValue,
+        });
+      });
+      window.myChart.options.scales.yAxes[0].scaleLabel.labelString =
+        mode + " [" + unit + "]";
+      window.myChart.update();
+    }
+  </script>
 </html>
