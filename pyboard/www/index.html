@@ -130,8 +130,8 @@
     }
 
     function testWebSocket() {
-      //var wsUri = "ws://" + window.location.hostname;
-      var wsUri = "ws://espressif.lan";
+      var wsUri = "ws://" + window.location.hostname;
+      //var wsUri = "ws://espressif.lan";
       console.log("Connection to " + wsUri + "...");
       websocket = new WebSocket(wsUri);
       websocket.onopen = function (evt) {
