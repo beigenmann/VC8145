@@ -117,7 +117,7 @@
     }
   </style>
 
-  <script src="moment.min.js"></script>
+  <!-- <script src="moment.min.js"></script> -->
   <script src="Chart.min.js"></script>
   <script src="chartjs-plugin-streaming.min.js"></script>
 
@@ -130,8 +130,8 @@
     }
 
     function testWebSocket() {
-      var wsUri = "ws://" + window.location.hostname;
-      //var wsUri = "ws://espressif.lan";
+      //var wsUri = "ws://" + window.location.hostname;
+      var wsUri = "ws://espressif.lan";
       console.log("Connection to " + wsUri + "...");
       websocket = new WebSocket(wsUri);
       websocket.onopen = function (evt) {
@@ -256,6 +256,12 @@
       console.log("onTimer");
       websocket.send("timer");
     }
+    function toggleChart() {
+      var chart = document.getElementById("myChart");
+      chart.style.visibility =
+        chart.style.visibility == "hidden" ? "visible" : "hidden";
+      console.log(chart.style.visibility);
+    }
 
     window.addEventListener("load", init, false);
   </script>
@@ -287,6 +293,7 @@
       <button onmousedown="onTimer()">Timer</button>
     </div>
     <progress id="analog_bar" value="0" max="32">32%</progress>
+    <button onmousedown="toggleChart()">Toggle Chart</button>
     <div>
       <canvas id="myChart"></canvas>
     </div>
@@ -345,6 +352,11 @@
               realtime: {
                 duration: 20000,
                 delay: 0,
+              },
+              time: {
+                displayFormats: {
+                  millisecond: "mm:ss:SSS",
+                },
               },
             },
           ],
