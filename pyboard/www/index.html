@@ -117,7 +117,7 @@
     }
   </style>
 
-  <!-- <script src="moment.min.js"></script> -->
+  <script src="moment.min.js"></script>
   <script src="Chart.min.js"></script>
   <script src="chartjs-plugin-streaming.min.js"></script>
 
@@ -130,8 +130,8 @@
     }
 
     function testWebSocket() {
-      //var wsUri = "ws://" + window.location.hostname;
-      var wsUri = "ws://espressif.lan";
+      var wsUri = "ws://" + window.location.hostname;
+      //var wsUri = "ws://espressif.lan";
       console.log("Connection to " + wsUri + "...");
       websocket = new WebSocket(wsUri);
       websocket.onopen = function (evt) {
@@ -350,12 +350,15 @@
             {
               type: "realtime",
               realtime: {
-                duration: 20000,
+                duration: 30000,
                 delay: 0,
               },
               time: {
                 displayFormats: {
-                  millisecond: "mm:ss:SSS",
+                  millisecond: "",
+                  second: "HH:mm:ss",
+                  minute: "mm",
+                  hour: "",
                 },
               },
             },
