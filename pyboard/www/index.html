@@ -85,7 +85,7 @@
       font-family: Arial, Helvetica, sans-serif;
       background-color: blue;
       color: white;
-      width: 12vw;
+      width: 10vw;
       height: 2vw;
       margin: 5px;
       display: inline-block;
@@ -95,7 +95,7 @@
 
     button {
       font-size: 2vw;
-      width: 12vw;
+      width: 10vw;
       margin: 5px;
     }
 
@@ -109,6 +109,7 @@
       padding: 0;
       font-family: verdana, arial, helvetica, sans-serif;
       font-size: 0.8em;
+      visibility: hidden;
     }
     canvas {
       -moz-user-select: none;
@@ -130,8 +131,8 @@
     }
 
     function testWebSocket() {
-      var wsUri = "ws://" + window.location.hostname;
-      //var wsUri = "ws://espressif.lan";
+      //var wsUri = "ws://" + window.location.hostname;
+      var wsUri = "ws://espressif.lan";
       console.log("Connection to " + wsUri + "...");
       websocket = new WebSocket(wsUri);
       websocket.onopen = function (evt) {
@@ -146,6 +147,8 @@
       websocket.onerror = function (evt) {
         onError(evt);
       };
+      var chart = document.getElementById("_Chart");
+      chart.style.visibility = "hidden";
     }
 
     function onOpen(evt) {
@@ -257,10 +260,9 @@
       websocket.send("timer");
     }
     function toggleChart() {
-      var chart = document.getElementById("myChart");
+      var chart = document.getElementById("_Chart");
       chart.style.visibility =
         chart.style.visibility == "hidden" ? "visible" : "hidden";
-      console.log(chart.style.visibility);
     }
 
     window.addEventListener("load", init, false);
@@ -291,11 +293,11 @@
       <button onmousedown="onSelect()">Select</button>
       <button onmousedown="on2ndView()">2nd View</button>
       <button onmousedown="onTimer()">Timer</button>
+      <button onmousedown="toggleChart()">Chart</button>
     </div>
     <progress id="analog_bar" value="0" max="32">32%</progress>
-    <button onmousedown="toggleChart()">Toggle Chart</button>
     <div>
-      <canvas id="myChart"></canvas>
+      <canvas id="_Chart"></canvas>
     </div>
   </body>
   <script>
@@ -384,21 +386,21 @@
     };
 
     window.onload = function () {
-      var ctx = document.getElementById("myChart").getContext("2d");
-      window.myChart = new Chart(ctx, config);
+      var ctx = document.getElementById("_Chart").getContext("2d");
+      window._Chart = new Chart(ctx, config);
     };
 
     // your event listener code - assuming the event object has the timestamp and value properties
     function updateChart(timestamp, value, unit, mode) {
       currentValue = Number.parseFloat(value);
-      window.myChart.config.data.datasets.forEach(function (dataset) {
+      window._Chart.config.data.datasets.forEach(function (dataset) {
         dataset.label = mode + " [" + unit + "]";
         dataset.data.push({
           x: Date.now(),
           y: currentValue,
         });
       });
-      window.myChart.options.scales.yAxes[0].scaleLabel.labelString =
+      window._Chart.options.scales.yAxes[0].scaleLabel.labelString =
         mode + " [" + unit + "]";
       window.myChart.update();
     }
