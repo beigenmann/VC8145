@@ -228,36 +228,36 @@
     }
     function onRange() {
       console.log("onRange");
-      websocket.send("range");
+      websocket.send('{ "msg":"range"}');
     }
     function onHold() {
       console.log("onHold");
-      websocket.send("hold");
+      websocket.send('{ "msg":"hold"}');
     }
 
     function onRel() {
       console.log("onRel");
-      websocket.send("rel");
+      websocket.send('{ "msg":"rel"}');
     }
 
     function onMinMax() {
       console.log("onMinMax");
-      websocket.send("min_max");
+      websocket.send('{ "msg":"min_max"}');
     }
 
     function onSelect() {
       console.log("onSelect");
-      websocket.send("select");
+      websocket.send('{ "msg":"select"}');
     }
 
     function on2ndView() {
       console.log("on2ndView");
-      websocket.send("2nd_view");
+      websocket.send('{ "msg":2nd_view"}');
     }
 
     function onTimer() {
       console.log("onTimer");
-      websocket.send("timer");
+      websocket.send('{ "msg":"timer"}');
     }
     function toggleChart() {
       var chart = document.getElementById("_Chart");
