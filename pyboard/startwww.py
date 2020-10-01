@@ -1,8 +1,9 @@
 from microWebSrv import MicroWebSrv
-from machine import UART, RTC, Timer
+from machine import UART, Timer
 import machine
 import ujson
-import ntptime
+
+# import ntptime
 import esp32
 
 
@@ -11,16 +12,16 @@ try:
     uart.init(9600, bits=8, parity=None, stop=1, rx=13, tx=12, timeout=500)
 except:
     print("Exception Uart")
-try:
-    rtc = RTC()
-    ntptime.settime()
-except:
-    print("Exception rtp")
+# try:
+#     rtc = RTC()
+#     ntptime.settime()
+# except:
+#     print("Exception rtp")
 
 
 websocketList = []
 timer = Timer(0)
-timer.init(freq=5, callback=lambda t: timerEvent())
+timer.init(freq=1, callback=lambda t: timerEvent())
 _cmd = 0
 _minmax = ""
 _hold = ""
@@ -49,10 +50,10 @@ def timerEvent():
         dict["internal"] = round(
             (esp32.raw_temperature() - 32) * 5 / 9, 1
         )  # Read ESP32 internal temp
-        try:
-            dict["time"] = rtc.datetime()  # Record current time
-        except:
-            dict["time"] = "0"
+        # try:
+        #     dict["time"] = rtc.datetime()  # Record current time
+        # except:
+        #     dict["time"] = "0"
         # dictfirst = dict["first"]
         # dictsecond = dict["second"]
         # if dictfirst["mode"] == "Diode":
@@ -213,6 +214,7 @@ def _recvTextCallback(webSocket, msg):
             _rangecount = _rangecount + 1
         print("Convert : %s" % msg)
     _cmd = switcher.get(msg, 0)
+    timerEvent()
 
 
 def _recvBinaryCallback(webSocket, data):
