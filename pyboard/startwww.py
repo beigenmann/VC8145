@@ -21,7 +21,7 @@ except:
 
 websocketList = []
 timer = Timer(0)
-timer.init(freq=1, callback=lambda t: timerEvent())
+timer.init(freq=5, callback=lambda t: timerEvent())
 _cmd = 0
 _minmax = ""
 _hold = ""

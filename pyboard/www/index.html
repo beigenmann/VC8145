@@ -162,7 +162,7 @@
     function onClose(evt) {
       console.log("<strong>-- DISCONNECTED --</strong>");
     }
-
+    freq_count = 0;
     function onMessage(evt) {
       try {
         //console.log('MSG FROM SERVER' , evt.data  );
@@ -200,7 +200,12 @@
         setValue("minmax", data["first"].minmax);
         document.getElementById("analog_bar").value =
           data["status"].value - 0x7f;
-        updateChart(data["time"], firstValue, firstUnit, data["first"].mode);
+        freq_count++;
+        freq_count = freq_count % 50;
+        if (freq_count == 1) {
+          updateChart(data["time"], firstValue, firstUnit, data["first"].mode);
+        }
+
         // console.log("MSG FROM SERVER", data["status"].value);
       } catch (e) {}
     }
@@ -352,7 +357,7 @@
             {
               type: "realtime",
               realtime: {
-                duration: 30000,
+                duration: 300000,
                 delay: 0,
               },
               time: {
