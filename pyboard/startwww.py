@@ -28,6 +28,11 @@ _rel = ""
 _rangecount = 0
 
 
+def set_freq(freq):
+    global timer
+    timer.freq(freq)
+
+
 def timerEvent():
     # print("Timer Event")
     global _cmd
@@ -164,7 +169,14 @@ def _acceptWebSocketCallback(webSocket, httpClient):
 def _recvTextCallback(webSocket, msg):
     print("WS RECV TEXT : %s" % msg)
     parse = ujson.loads(msg)
-    msg = parse["msg"]
+
+    update_freq = parse.get("update_freq")
+    if not update_freq is None:
+        set_freq(update_freq)
+        print("update_freq : %s" % update_freq)
+    msg = parse.get("msg")
+    if msg is None:
+        return
     switcher = {
         "auto_range": 0xA0,
         "range": 0xA1,
