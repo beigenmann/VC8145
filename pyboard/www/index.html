@@ -92,7 +92,11 @@
       text-align: center;
       vertical-align: middle;
     }
-
+    #chart {
+      width: 99vw;
+      height: 80vw;
+      display: none;
+    }
     button {
       font-size: 2vw;
       width: 10vw;
@@ -108,13 +112,8 @@
       margin: 0;
       padding: 0;
       font-family: verdana, arial, helvetica, sans-serif;
-      font-size: 0.8em;
-      visibility: hidden;
-    }
-    canvas {
-      -moz-user-select: none;
-      -webkit-user-select: none;
-      -ms-user-select: none;
+      font-size: 1em;
+      display: none;
     }
   </style>
 
@@ -131,8 +130,8 @@
     }
 
     function testWebSocket() {
-      var wsUri = "ws://" + window.location.hostname;
-      //var wsUri = "ws://espressif.lan";
+      //var wsUri = "ws://" + window.location.hostname;
+      var wsUri = "ws://espressif.lan";
       console.log("Connection to " + wsUri + "...");
       websocket = new WebSocket(wsUri);
       websocket.onopen = function (evt) {
@@ -147,8 +146,6 @@
       websocket.onerror = function (evt) {
         onError(evt);
       };
-      var chart = document.getElementById("_Chart");
-      chart.style.visibility = "hidden";
     }
 
     function onOpen(evt) {
@@ -264,33 +261,62 @@
       console.log("onTimer");
       websocket.send('{ "msg":"timer"}');
     }
-    function toggleChart() {
-      var chart = document.getElementById("_Chart");
-      chart.style.visibility =
-        chart.style.visibility == "hidden" ? "visible" : "hidden";
-    }
+    tabName = "meter";
+    function toggleMeterChart(evt) {
+      if (tabName == "chart") {
+        tabName = "meter";
+        document.getElementById("toggleMeterChart").textContent = "Chart";
+      } else {
+        tabName = "chart";
+        document.getElementById("toggleMeterChart").textContent = "Meter";
+      }
+      // Declare all variables
+      var i, tabcontent, tablinks;
 
+      // Get all elements with class="tabcontent" and hide them
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+
+      // Get all elements with class="tablinks" and remove the class "active"
+
+      tablinks = document.getElementsByClassName("tablinks");
+
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+
+      // Show the current tab, and add an "active" class to the button that opened the tab
+      document.getElementById(tabName).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
     window.addEventListener("load", init, false);
   </script>
   <body>
-    <!-- <div id="output"></div> -->
-    <div>
-      <div id="mode1"></div>
-      <div id="mode2"></div>
-      <div id="meterValue1"></div>
-      <div id="unit1"></div>
+    <div id="meter" class="tabcontent">
+      <div>
+        <div id="mode1"></div>
+        <div id="mode2"></div>
+        <div id="meterValue1"></div>
+        <div id="unit1"></div>
+      </div>
+      <div>
+        <div id="meterValue2"></div>
+        <div id="unit2"></div>
+      </div>
     </div>
-    <div>
-      <div id="meterValue2"></div>
-      <div id="unit2"></div>
+    <div id="chart" class="tabcontent">
+      <canvas id="_Chart"></canvas>
     </div>
+    <progress id="analog_bar" value="0" max="32">32%</progress>
     <div>
       <span id="range"></span>
       <span id="hold"></span>
       <span id="rel"></span>
       <span id="minmax"></span>
     </div>
-    <div>
+    <div class="tab">
       <button onmousedown="onRange()">Range</button>
       <button onmousedown="onHold()">Hold</button>
       <button onmousedown="onRel()">Rel</button>
@@ -298,11 +324,13 @@
       <button onmousedown="onSelect()">Select</button>
       <button onmousedown="on2ndView()">2nd View</button>
       <button onmousedown="onTimer()">Timer</button>
-      <button onmousedown="toggleChart()">Chart</button>
-    </div>
-    <progress id="analog_bar" value="0" max="32">32%</progress>
-    <div>
-      <canvas id="_Chart"></canvas>
+      <button
+        class="tablinks"
+        id="toggleMeterChart"
+        onmousedown="toggleMeterChart(event)"
+      >
+        Chart
+      </button>
     </div>
   </body>
   <script>
