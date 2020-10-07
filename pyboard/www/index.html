@@ -93,8 +93,7 @@
       vertical-align: middle;
     }
     #chart {
-      width: 99vw;
-      height: 80vw;
+      height: 80vh;
       display: none;
     }
     button {
@@ -130,8 +129,8 @@
     }
 
     function testWebSocket() {
-      //var wsUri = "ws://" + window.location.hostname;
-      var wsUri = "ws://espressif.lan";
+      var wsUri = "ws://" + window.location.hostname;
+      //var wsUri = "ws://espressif.lan";
       console.log("Connection to " + wsUri + "...");
       websocket = new WebSocket(wsUri);
       websocket.onopen = function (evt) {
@@ -294,7 +293,7 @@
     window.addEventListener("load", init, false);
   </script>
   <body>
-    <div id="meter" class="tabcontent">
+    <div id="meter" style="height: 80vh" class="tabcontent">
       <div>
         <div id="mode1"></div>
         <div id="mode2"></div>
@@ -376,6 +375,7 @@
         ],
       },
       options: {
+        maintainAspectRatio: false,
         title: {
           display: true,
           text: "VC8145",
