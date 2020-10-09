@@ -142,6 +142,9 @@ function toggleMeterChart(evt) {
   } else {
     tabName = "chart";
     document.getElementById("toggleMeterChart").textContent = "Meter";
+    window._Chart.config.data.datasets.forEach(function (dataset) {
+      dataset.data = [];
+    });
   }
   // Declare all variables
   var i, tabcontent, tablinks;
