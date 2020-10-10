@@ -36,6 +36,11 @@ function onClose(evt) {
   console.log("<strong>-- DISCONNECTED --</strong>");
 }
 freq_count = 0;
+freq_modulo = 1;
+function changeFreq() {
+  var x = document.getElementById("sampelfreq").value;
+  freq_modulo = x;
+}
 function onMessage(evt) {
   try {
     //console.log('MSG FROM SERVER' , evt.data  );
@@ -73,9 +78,10 @@ function onMessage(evt) {
     setValue("minmax", data["first"].minmax);
     document.getElementById("analog_bar").value = data["status"].value - 0x7f;
     freq_count++;
-    freq_count = freq_count % 50;
-    if (freq_count == 1) {
+    freq_count = freq_count % freq_modulo;
+    if (freq_count == 0) {
       updateChart(data["time"], firstValue, firstUnit, data["first"].mode);
+      freq_count = 0;
     }
 
     // console.log("MSG FROM SERVER", data["status"].value);
